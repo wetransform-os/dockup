@@ -13,7 +13,7 @@ echo "[$start_time] Initiating backup $BACKUP_NAME..."
 
 # Get timestamp
 : ${BACKUP_SUFFIX:=.$(date +"%Y-%m-%d-%H-%M-%S")}
-readonly tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
+tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
 
 # If a pre-backup command is defined, run it before creating the tarball
 if [ -n "$BEFORE_BACKUP_CMD" ]; then
@@ -32,6 +32,26 @@ if [ $rc -ne 0 ]; then
   exit $rc
 else
   echo "Created archive $tarball"
+fi
+
+# encrypt archive
+if [ -n "$GPG_KEYNAME" -a -n "$GPG_KEYRING" ]; then
+  echo "Encrypting backup archive..."
+  time gpg --batch --no-default-keyring --keyring "$GPG_KEYRING" --trust-model always --encrypt --recipient "$GPG_KEYNAME" $tarball
+  rc=$?
+  if [ $rc -ne 0 ]; then
+    echo "ERROR: Error encrypting backup archive"
+    # early exit
+    rm $tarball
+    cleanup
+    exit $rc;
+  fi
+  echo "Encryption completed successfully"
+  # remove original tarball and point to encrypted file
+  rm $tarball
+  tarball="$tarball.gpg"
+else
+  echo "Encryption not configured...skipping"
 fi
 
 # Create bucket, if it doesn't already exist (only try if listing is successful - access may be denied)

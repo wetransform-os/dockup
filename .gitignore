@@ -1,3 +1,5 @@
 # test script
 test-env.txt
 tmp*.txt
+*.pub
+*.sec
