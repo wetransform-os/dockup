@@ -48,9 +48,44 @@ RESTORE=false
 
 `dockup` will use your AWS credentials to create a new bucket with name as per the environment variable `S3_BUCKET_NAME`, or if not defined, using the default name `docker-backups.example.com`. The paths in `PATHS_TO_BACKUP` will be tarballed, gzipped, time-stamped and uploaded to the S3 bucket.
 
+For more complex backup tasks as dumping a database, you can optionally define the environment variables `BEFORE_BACKUP_CMD` and `AFTER_BACKUP_CMD`.
+
+### Scheduling
+
+If you want `dockup` to run the backup as a cron task, you can set the environment variable `CRON_TIME` to the desired frequency, for example `CRON_TIME=0 0 * * *` to backup every day at midnight.
 
 ## Restore
-To restore your data simply set the `RESTORE` environment variable to `true` - this will restore the latest backup from S3 to your volume.
+To restore your data simply set the `RESTORE` environment variable to `true` - this will restore the latest backup from S3 to your volume. If you want to restore a specific backup instead of the last one, you can also set the environment variable `LAST_BACKUP` to the desired tarball name.
+
+For more complex restore operations, you can define a command to be run once the tarball has been downloaded and extracted using the environment variable `AFTER_RESTORE_CMD`.
+
+### Encryption
+
+You can use GnuPG to encrypt backup archives and decrpyt them again when you need to restore them.
+You need a GnuPG public key for encryption and the corresponding private key for decryption.
+Keep the private key safe (and secret), otherwise you will not be able to restore your backups.
+
+For backup, the following environment variables need to be set:
+
+* **GPG_KEYRING** - the location of the public keyring containing the public key you want to use for encryption
+* **GPG_KEYNAME** - the user ID identifying the key
+
+For restoring an encrypted file, the following environment variables need to be set:
+
+* **GPG_KEYRING** - the location of the public keyring
+* **GPG_SECRING** - the location of the secret keyring containing the private key you need for decryption
+* **GPG_PASSPHRASE** - the passphrase needed to access the private key
+
+
+## Local testing
+
+There is a handy script `./test-backup.sh` you can use for local testing.
+All you need is Docker and configuring your S3 connection.
+For that purpose, copy `test-env.txt.sample` to `test-env.txt` and adapt the variables accordingly.
+
+Optionally generate a GPG key for testing encryption/decryption using `./gen-test-key.sh`.
+It will be automatically used when you execute `./test-backup.sh`.
+If you want to test w/o encryption after generating the key, rn `./test-backup.sh --no-encryption`.
 
 
 ## A note on Buckets

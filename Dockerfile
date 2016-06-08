@@ -3,9 +3,7 @@ MAINTAINER Borja Burgos <borja@tutum.co>, Mia Iversen <mia@chillfox.com
 
 RUN apt-get update && apt-get install -y python-pip && pip install awscli
 
-ADD backup.sh /backup.sh
-ADD restore.sh /restore.sh
-ADD run.sh /run.sh
+ADD /scripts /
 RUN chmod 755 /*.sh
 
 ENV S3_BUCKET_NAME docker-backups.example.com
