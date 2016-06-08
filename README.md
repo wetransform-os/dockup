@@ -77,6 +77,17 @@ For restoring an encrypted file, the following environment variables need to be 
 * **GPG_PASSPHRASE** - the passphrase needed to access the private key
 
 
+## Local testing
+
+There is a handy script `./test-backup.sh` you can use for local testing.
+All you need is Docker and configuring your S3 connection.
+For that purpose, copy `test-env.txt.sample` to `test-env.txt` and adapt the variables accordingly.
+
+Optionally generate a GPG key for testing encryption/decryption using `./gen-test-key.sh`.
+It will be automatically used when you execute `./test-backup.sh`.
+If you want to test w/o encryption after generating the key, rn `./test-backup.sh --no-encryption`.
+
+
 ## A note on Buckets
 
 > [Bucket naming guidelines](http://docs.aws.amazon.com/cli/latest/userguide/using-s3-commands.html):
