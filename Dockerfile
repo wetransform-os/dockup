@@ -13,5 +13,6 @@ ENV AWS_DEFAULT_REGION us-east-1
 ENV PATHS_TO_BACKUP /paths/to/backup
 ENV BACKUP_NAME backup
 ENV RESTORE false
+ENV RESTORE_TAR_OPTION --preserve-permissions
 
 CMD ["/run.sh"]
