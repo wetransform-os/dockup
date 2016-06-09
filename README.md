@@ -1,7 +1,7 @@
 
 # Dockup
 
-[![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/)
+[![Docker Hub Badge](https://img.shields.io/badge/Docker-Hub%20Hosted-blue.svg)](https://hub.docker.com/r/wetransform/dockup/)
 
 Docker image to backup your Docker container volumes
 
@@ -19,9 +19,9 @@ From executing a `$ docker inspect mysql` we see that this container has two vol
 
 ```
 "Volumes": {
-            "/etc/mysql": {},
-            "/var/lib/mysql": {}
-        }
+  "/etc/mysql": {},
+  "/var/lib/mysql": {}
+}
 ```
 
 ## Backup
@@ -31,10 +31,10 @@ Launch `dockup` container with the following flags:
 $ docker run --rm \
 --env-file env.txt \
 --volumes-from mysql \
---name dockup tutum/dockup:latest
+--name dockup wetransform/dockup:latest
 ```
 
-The contents of `env.txt` being:
+The contents of `env.txt` being something like:
 
 ```
 AWS_ACCESS_KEY_ID=<key_here>
@@ -65,7 +65,7 @@ To restore your data simply set the `RESTORE` environment variable to `true` - t
 
 For more complex restore operations, you can define a command to be run once the tarball has been downloaded and extracted using the environment variable `AFTER_RESTORE_CMD`.
 
-### Encryption
+## Encryption
 
 You can use GnuPG to encrypt backup archives and decrpyt them again when you need to restore them.
 You need a GnuPG public key for encryption and the corresponding private key for decryption.
