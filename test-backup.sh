@@ -41,7 +41,7 @@ docker cp tmpBackup.txt dockup-data-test:/data/file.txt
 docker run --rm \
   --env-file test-env.txt \
   -e BACKUP_NAME=dockup-test \
-  -e PATHS_TO_BACKUP=/data \
+  -e PATHS_TO_BACKUP=auto \
   -e GPG_KEYNAME=$GPG_KEYNAME \
   -e GPG_KEYRING=/$GPG_KEYNAME.pub \
   --volumes-from dockup-data-test \
