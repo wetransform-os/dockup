@@ -50,9 +50,15 @@ RESTORE=false
 
 For more complex backup tasks as dumping a database, you can optionally define the environment variables `BEFORE_BACKUP_CMD` and `AFTER_BACKUP_CMD`.
 
+### Detect volumes
+
+Instead of providing paths manually you can set the `PATHS_TO_BACKUP` to `auto`.
+Using this setting the backup script will try to the detect the volumes mounted into the running backup container and include these into the backup archive.
+
 ### Scheduling
 
 If you want `dockup` to run the backup as a cron task, you can set the environment variable `CRON_TIME` to the desired frequency, for example `CRON_TIME=0 0 * * *` to backup every day at midnight.
+
 
 ## Restore
 To restore your data simply set the `RESTORE` environment variable to `true` - this will restore the latest backup from S3 to your volume. If you want to restore a specific backup instead of the last one, you can also set the environment variable `LAST_BACKUP` to the desired tarball name.
