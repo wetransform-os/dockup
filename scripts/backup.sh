@@ -91,7 +91,7 @@ fi
 
 # Upload the backup to S3 with timestamp
 echo "Uploading the archive to S3..."
-time aws s3 --region $AWS_DEFAULT_REGION cp $tarball s3://$S3_BUCKET_NAME/$tarball
+time aws s3 --region $AWS_DEFAULT_REGION cp $tarball "s3://${S3_BUCKET_NAME}/${S3_FOLDER}${tarball}"
 rc=$?
 
 # Clean up

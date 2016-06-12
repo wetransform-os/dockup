@@ -43,10 +43,14 @@ AWS_DEFAULT_REGION=us-east-1
 BACKUP_NAME=mysql
 PATHS_TO_BACKUP=/etc/mysql /var/lib/mysql
 S3_BUCKET_NAME=docker-backups.example.com
+S3_FOLDER=mybackups/
 RESTORE=false
 ```
 
 `dockup` will use your AWS credentials to create a new bucket with name as per the environment variable `S3_BUCKET_NAME`, or if not defined, using the default name `docker-backups.example.com`. The paths in `PATHS_TO_BACKUP` will be tarballed, gzipped, time-stamped and uploaded to the S3 bucket.
+
+To place backups in a specific folder in the S3 bucket, provide it in the `S3_FOLDER` variable.
+It should either be empty or hold a path and end with a slash.
 
 For more complex backup tasks as dumping a database, you can optionally define the environment variables `BEFORE_BACKUP_CMD` and `AFTER_BACKUP_CMD`.
 
