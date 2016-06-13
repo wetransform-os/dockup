@@ -3,8 +3,8 @@ MAINTAINER Simon Templer <simon@wetransform.to>
 
 RUN apt-get update && apt-get install -y python-pip && pip install awscli
 
-ADD /scripts /
-RUN chmod 755 /*.sh
+ADD /scripts /dockup/
+RUN chmod 755 /dockup/*.sh
 
 ENV S3_BUCKET_NAME docker-backups.example.com
 ENV AWS_ACCESS_KEY_ID **DefineMe**
@@ -15,4 +15,5 @@ ENV BACKUP_NAME backup
 ENV RESTORE false
 ENV RESTORE_TAR_OPTION --preserve-permissions
 
-CMD ["/run.sh"]
+WORKDIR /dockup
+CMD ["./run.sh"]
