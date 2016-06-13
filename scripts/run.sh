@@ -13,7 +13,7 @@ else
     crontab ./crontab.conf
     echo "=> Running dockup backups as a cronjob for ${CRON_TIME}"
     cron
-    tail -f "$LOGFIFO"
+    tail -n +0 -f "$LOGFIFO"
   else
     ./backup.sh
   fi
