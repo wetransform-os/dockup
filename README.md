@@ -7,6 +7,10 @@ Docker image to backup your Docker container volumes
 
 Why the name? Docker + Backup = Dockup
 
+Instead of backing up volumes you can also run tasks that provide the files to be backed up. See the following projects as examples on building on Dockup for that purpose:
+
+* [wetransform-os/dockup-mongo](https://github.com/wetransform-os/dockup-mongo) - Uses `mongodump` and `mongorestore` to backup and restore a MongoDB instance
+
 # Usage
 
 You have a container running with one or more volumes:
