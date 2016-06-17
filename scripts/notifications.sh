@@ -25,7 +25,11 @@ function notifyFailure {
 
 function notifySlackSuccess {
   slack_success_message="Backup archive successfully uploaded to bucket $S3_BUCKET_NAME."
-  slack_attachment="{\"fallback\": \"$notify_summary\", \"pretext\": \"$notify_summary\", \"text\": \"$slack_success_message\", \"color\": \"good\"}"
+  slack_success_fields=
+  if [ -n "$backup_size" ]; then
+    slack_success_fields="{\"title\": \"Size\", \"value\": \"$backup_size\", \"short\": true}"
+  fi
+  slack_attachment="{\"fallback\": \"$notify_summary\", \"pretext\": \"$notify_summary\", \"text\": \"$slack_success_message\", \"color\": \"good\", \"fields\": [$slack_success_fields]}"
 
   notifySlack
 }
