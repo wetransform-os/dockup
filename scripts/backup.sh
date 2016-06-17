@@ -1,6 +1,8 @@
 #!/bin/bash
 export PATH=$PATH:/usr/bin:/usr/local/bin:/bin
 
+source ./notifications.sh
+
 function cleanup {
   # If a post-backup command is defined (eg: for cleanup)
   if [ -n "$AFTER_BACKUP_CMD" ]; then
@@ -9,6 +11,7 @@ function cleanup {
 }
 
 start_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
+SECONDS=0
 echo "[$start_time] Initiating backup $BACKUP_NAME..."
 
 # Get timestamp
@@ -17,7 +20,13 @@ tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
 
 # If a pre-backup command is defined, run it before creating the tarball
 if [ -n "$BEFORE_BACKUP_CMD" ]; then
-	eval "$BEFORE_BACKUP_CMD" || exit
+	eval "$BEFORE_BACKUP_CMD"
+  rc=$?
+  if [ $rc -ne 0 ]; then
+    # early exit
+    notifyFailure "Error performing backup preparation task."
+    exit $rc
+  fi
 fi
 
 if [ "$PATHS_TO_BACKUP" == "auto" ]; then
@@ -37,7 +46,7 @@ if [ "$PATHS_TO_BACKUP" == "auto" ]; then
   volumes=$(eval $volume_cmd)
   
   if [ -z "$volumes" ]; then
-    echo "ERROR: No volumes for backup were detected."
+    notifyFailure "No volumes for backup were detected."
     exit 1
   fi
 
@@ -49,8 +58,8 @@ fi
 time tar czf $tarball $BACKUP_TAR_OPTION $PATHS_TO_BACKUP
 rc=$?
 if [ $rc -ne 0 ]; then
-  echo "ERROR: Error creating backup archive"
   # early exit
+  notifyFailure "Error creating backup archive."
   cleanup
   end_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
   echo -e "[$end_time] Backup failed\n\n"
@@ -65,8 +74,8 @@ if [ -n "$GPG_KEYNAME" -a -n "$GPG_KEYRING" ]; then
   time gpg --batch --no-default-keyring --keyring "$GPG_KEYRING" --trust-model always --encrypt --recipient "$GPG_KEYNAME" $tarball
   rc=$?
   if [ $rc -ne 0 ]; then
-    echo "ERROR: Error encrypting backup archive"
     # early exit
+    notifyFailure "Error encrypting backup archive."
     rm $tarball
     cleanup
     exit $rc;
@@ -78,6 +87,8 @@ if [ -n "$GPG_KEYNAME" -a -n "$GPG_KEYRING" ]; then
 else
   echo "Encryption not configured...skipping"
 fi
+
+backup_size=$(du -h "$tarball" | tr '\t' '\n' | grep -v "$tarball")
 
 # Create bucket, if it doesn't already exist (only try if listing is successful - access may be denied)
 BUCKET_LS=$(aws s3 --region $AWS_DEFAULT_REGION ls)
@@ -99,10 +110,12 @@ rm $tarball
 cleanup
 
 end_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
+backup_duration=`date -u -d @"$SECONDS" +'%-Mm %-Ss'`
 if [ $rc -ne 0 ]; then
-  echo "ERROR: Error uploading backup to S3"
+  notifyFailure "Error uploading backup to S3."
   echo -e "[$end_time] Backup failed\n\n"
   exit $rc
 else
+  notifySuccess
   echo -e "[$end_time] Archive successfully uploaded to S3\n\n"
 fi
