@@ -14,6 +14,8 @@ ENV PATHS_TO_BACKUP auto
 ENV BACKUP_NAME backup
 ENV RESTORE false
 ENV RESTORE_TAR_OPTION --preserve-permissions
+ENV NOTIFY_BACKUP_SUCCESS false
+ENV NOTIFY_BACKUP_FAILURE false
 
 WORKDIR /dockup
 CMD ["./run.sh"]
