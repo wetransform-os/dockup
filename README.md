@@ -91,6 +91,24 @@ For restoring an encrypted file, the following environment variables need to be 
 * **GPG_PASSPHRASE** - the passphrase needed to access the private key
 
 
+## Notifications
+
+To enable notifications for backups you can use the following environment variables:
+
+* **NOTIFY_BACKUP_SUCCESS** - set to `true` to enable notifications on backup success
+* **NOTIFY_BACKUP_FAILURE** - set to `true` to enable notifications on backup failure
+
+**In addition, you need to configure a notification method.**
+
+Currently supported are the following notifications methods:
+
+
+### Slack
+
+To configure Slack notifications you need to set at least the `NOTIFY_SLACK_WEBHOOK_URL` environment variable.
+Create an *Incoming Webhook* as a new integration in Slack and put the Webhook URL in here.
+
+
 ## Local testing
 
 There is a handy script `./test-backup.sh` you can use for local testing.
