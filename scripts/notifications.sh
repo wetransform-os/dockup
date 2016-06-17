@@ -52,8 +52,6 @@ function notifySlack {
     else
       slack_payload="{\"text\": \"$notify_summary\"}"
     fi
-    #debug
-    echo $slack_payload
     curl --silent --show-error -X POST --data-urlencode "payload=$slack_payload" $NOTIFY_SLACK_WEBHOOK_URL
   fi
 }
