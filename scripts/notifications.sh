@@ -29,6 +29,10 @@ function notifySlackSuccess {
   if [ -n "$backup_size" ]; then
     slack_success_fields="{\"title\": \"Size\", \"value\": \"$backup_size\", \"short\": true}"
   fi
+  if [ -n "$backup_files_count" ]; then
+    if [ -n "$slack_success_fields" ]; then slack_success_fields="$slack_success_fields, "; fi
+    slack_success_fields="$slack_success_fields{\"title\": \"Files\", \"value\": \"$backup_files_count\", \"short\": true}"
+  fi
   if [ -n "$backup_duration" ]; then
     if [ -n "$slack_success_fields" ]; then slack_success_fields="$slack_success_fields, "; fi
     slack_success_fields="$slack_success_fields{\"title\": \"Duration\", \"value\": \"$backup_duration\", \"short\": true}"

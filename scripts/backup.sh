@@ -68,6 +68,8 @@ else
   echo "Created archive $tarball"
 fi
 
+backup_files_count=$(tar -tzf $tarball | wc -l)
+
 # encrypt archive
 if [ -n "$GPG_KEYNAME" -a -n "$GPG_KEYRING" ]; then
   echo "Encrypting backup archive..."
