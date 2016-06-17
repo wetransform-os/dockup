@@ -11,6 +11,7 @@ function cleanup {
 }
 
 start_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
+SECONDS=0
 echo "[$start_time] Initiating backup $BACKUP_NAME..."
 
 # Get timestamp
@@ -109,6 +110,7 @@ rm $tarball
 cleanup
 
 end_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
+backup_duration=`date -u -d @"$SECONDS" +'%-Mm %-Ss'`
 if [ $rc -ne 0 ]; then
   notifyFailure "Error uploading backup to S3."
   echo -e "[$end_time] Backup failed\n\n"
