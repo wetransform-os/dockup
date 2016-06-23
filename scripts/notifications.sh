@@ -33,7 +33,11 @@ function notifySlackSuccess {
     if [ -n "$slack_success_fields" ]; then slack_success_fields="$slack_success_fields, "; fi
     slack_success_fields="$slack_success_fields{\"title\": \"Duration\", \"value\": \"$backup_duration\", \"short\": true}"
   fi
-  slack_attachment="{\"fallback\": \"$notify_summary\", \"pretext\": \"$notify_summary\", \"text\": \"$slack_success_message\", \"color\": \"good\", \"fields\": [$slack_success_fields]}"
+  slack_color="good"
+  if [ $tar_try -gt 0 ]; then
+    slack_color="warning"
+  fi
+  slack_attachment="{\"fallback\": \"$notify_summary\", \"pretext\": \"$notify_summary\", \"text\": \"$slack_success_message\", \"color\": \"$slack_color\", \"fields\": [$slack_success_fields]}"
 
   notifySlack
 }

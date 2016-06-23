@@ -29,6 +29,7 @@ From executing a `$ docker inspect mysql` we see that this container has two vol
 ```
 
 ## Backup
+
 Launch `dockup` container with the following flags:
 
 ```
@@ -66,6 +67,19 @@ Using this setting the backup script will try to the detect the volumes mounted 
 ### Scheduling
 
 If you want `dockup` to run the backup as a cron task, you can set the environment variable `CRON_TIME` to the desired frequency, for example `CRON_TIME=0 0 * * *` to backup every day at midnight.
+
+### Retries
+
+Sometimes creating the TAR archive may fail, often due to modifications to the files while `tar` is running.
+
+If this happens very often, you should consider using a different option than creating TAR archives for backup.
+The `BEFORE_BACKUP_CMD` and `AFTER_BACKUP_CMD` environment variables can help with that.
+
+If this happens seldomly and you want to avoid a backup failing due to that, you can configure Dockup to retry creating the archive if it fails.
+For that, use the following environment variables:
+
+* **BACKUP_TAR_TRIES** - maximum number of tries for the backup (defaults to `5`)
+* **BACKUP_TAR_RETRY_SLEEP** - number of seconds to wait between retries (defaults to `30`)
 
 
 ## Restore

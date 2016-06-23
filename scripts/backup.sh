@@ -55,8 +55,24 @@ if [ "$PATHS_TO_BACKUP" == "auto" ]; then
 fi
 
 # Create a gzip compressed tarball with the volume(s)
-time tar czf $tarball $BACKUP_TAR_OPTION $PATHS_TO_BACKUP
-rc=$?
+tar_try=0
+until [ $tar_try -ge $BACKUP_TAR_TRIES ]
+do
+  time tar czf $tarball $BACKUP_TAR_OPTION $PATHS_TO_BACKUP
+  rc=$?
+  if [ $rc -eq 0 ]; then
+    echo "Created archive $tarball"
+    break
+  else
+    tar_try=$[$tar_try+1]
+    rm $tarball
+    if [ ! $tar_try -ge $BACKUP_TAR_TRIES ]; then
+      echo "Attempt to create archive failed, retrying..."
+      sleep $BACKUP_TAR_RETRY_SLEEP
+    fi
+  fi
+done
+
 if [ $rc -ne 0 ]; then
   # early exit
   notifyFailure "Error creating backup archive."
@@ -64,8 +80,6 @@ if [ $rc -ne 0 ]; then
   end_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
   echo -e "[$end_time] Backup failed\n\n"
   exit $rc
-else
-  echo "Created archive $tarball"
 fi
 
 # encrypt archive
