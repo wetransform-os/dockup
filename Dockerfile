@@ -1,6 +1,5 @@
 FROM debian:jessie-slim
 LABEL maintainer="Simon Templer <simon@wetransform.to>"
-ENV CRON_TIME="0 0 * * *"
 CMD ["/dockup/run.sh"]
 ENV S3_BUCKET_NAME docker-backups.example.com
 ENV AWS_ACCESS_KEY_ID **DefineMe**
@@ -25,3 +24,4 @@ RUN apt-get update \
 && rm -rf /var/cache/debconf/*-old \
 && rm -rf /var/lib/apt/lists/* \
 && rm -rf /usr/share/doc/*
+WORKDIR /dockup
