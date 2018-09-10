@@ -115,10 +115,10 @@ cleanup
 end_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
 backup_duration=`date -u -d @"$SECONDS" +'%-Mm %-Ss'`
 if [ $rc -ne 0 ]; then
-  notifyFailure "Error uploading backup to S3."
+  notifyFailure "Error backuping up archive."
   echo -e "[$end_time] Backup failed\n\n"
   exit $rc
 else
   notifySuccess
-  echo -e "[$end_time] Archive successfully uploaded to S3\n\n"
+  echo -e "[$end_time] Archive successfully backed up\n\n"
 fi

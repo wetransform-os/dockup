@@ -46,6 +46,7 @@ docker run --rm \
   -e GPG_KEYRING=/$GPG_KEYNAME.pub \
   --volumes-from dockup-data-test \
   -v $(pwd)/$GPG_KEYNAME.pub:/$GPG_KEYNAME.pub \
+  -v $(pwd)/target:/dockup/target \
   --name dockup-run-test wetransform/dockup:local
 rc=$?; if [ $rc -ne 0 ]; then
   echo "ERROR: Error running backup"
@@ -69,6 +70,7 @@ docker run --rm \
   --volumes-from dockup-data-test \
   -v $(pwd)/$GPG_KEYNAME.pub:/$GPG_KEYNAME.pub \
   -v $(pwd)/$GPG_KEYNAME.sec:/$GPG_KEYNAME.sec \
+  -v $(pwd)/target:/dockup/target \
   --name dockup-run-test wetransform/dockup:local
 rc=$?; if [ $rc -ne 0 ]; then
   echo "ERROR: Error running restore"

@@ -59,6 +59,18 @@ It should either be empty or hold a path and end with a slash.
 
 For more complex backup tasks as dumping a database, you can optionally define the environment variables `BEFORE_BACKUP_CMD` and `AFTER_BACKUP_CMD`.
 
+### Backup target
+
+Although dockup was initially designed to specifically support backups so AWS S3, you can also use different kinds of backup targets.
+
+This is possible via the environment variable `DOCKUP_MODE`.
+It allows running custom logic to do the actual backup/restoration (see subfolders in `scripts/`).
+
+By default, the following modes are available:
+
+- `aws` - store in AWS S3
+- `local` - store in a local folder (e.g. in a volume mounted into the dockup container, defaults to `/dockup/target`)
+
 ### Detect volumes
 
 Instead of providing paths manually you can set the `PATHS_TO_BACKUP` to `auto`.

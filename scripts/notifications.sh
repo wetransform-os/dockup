@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# Note: Notification texts assume storage in S3
+#
+
 function notifySuccess {
   if [ "$NOTIFY_BACKUP_SUCCESS" == "true" ]; then
     notify_summary="[${S3_FOLDER}$BACKUP_NAME] Backup succeeded."
