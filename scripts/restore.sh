@@ -1,7 +1,11 @@
 #!/bin/bash
+SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
+cd $WORK_DIR
+CURRENT_DIR=$(pwd)
+echo "Working dir is $CURRENT_DIR, scripts in $SCRIPT_PATH"
 
 # do backup according to configured mode
-source "./${DOCKUP_MODE}/restore.sh"
+source "${SCRIPT_PATH}/${DOCKUP_MODE}/restore.sh"
 
 # Check if tarball is encrypted
 if [ ${LAST_BACKUP: -4} == ".gpg" ]; then

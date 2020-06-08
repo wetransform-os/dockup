@@ -35,4 +35,9 @@ ENV AWS_DEFAULT_REGION us-east-1
 ENV LOCAL_TARGET /dockup/target
 RUN mkdir $LOCAL_TARGET
 
+# working directory
+ENV WORK_DIR /dockup/work
+RUN mkdir -p $WORK_DIR
+VOLUME $WORK_DIR
+
 WORKDIR /dockup

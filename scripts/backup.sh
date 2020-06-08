@@ -1,7 +1,11 @@
 #!/bin/bash
 export PATH=$PATH:/usr/bin:/usr/local/bin:/bin
+SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
+cd $WORK_DIR
+CURRENT_DIR=$(pwd)
+echo "Working dir is $CURRENT_DIR, scripts in $SCRIPT_PATH"
 
-source ./notifications.sh
+source "${SCRIPT_PATH}/notifications.sh"
 
 function cleanup {
   # If a post-backup command is defined (eg: for cleanup)
@@ -105,7 +109,7 @@ fi
 backup_size=$(du -h "$tarball" | tr '\t' '\n' | grep -v "$tarball")
 
 # do backup according to configured mode
-source "./${DOCKUP_MODE}/backup.sh"
+source "${SCRIPT_PATH}/${DOCKUP_MODE}/backup.sh"
 rc=$?
 
 # Clean up

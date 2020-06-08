@@ -8,6 +8,8 @@
 # Optionally use the ./gen-test-key.sh script to generate
 # a GPG key used in this script.
 
+set -e
+
 GPG_KEYNAME=test-key
 GPG_PASSPHRASE=dockup-test
 

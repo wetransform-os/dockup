@@ -7,6 +7,8 @@
 #
 # Doesn't use encryption
 
+set -e
+
 # build dockup image
 docker build -t wetransform/dockup:local .
 
