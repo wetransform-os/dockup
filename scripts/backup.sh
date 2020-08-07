@@ -18,9 +18,18 @@ start_time=`date +%Y-%m-%d\\ %H:%M:%S\\ %Z`
 SECONDS=0
 echo "[$start_time] Initiating backup $BACKUP_NAME..."
 
+
+if [[ "$DOCKUP_COMPRESS" == "true" ]]; then
+  COMPRESS_OPTION="z"
+  TAR_EXTENSION="tar.gz"
+else
+  COMPRESS_OPTION=""
+  TAR_EXTENSION="tar"
+fi
+
 # Get timestamp
 : ${BACKUP_SUFFIX:=.$(date +"%Y-%m-%d-%H-%M-%S")}
-tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
+tarball=$BACKUP_NAME$BACKUP_SUFFIX.$TAR_EXTENSION
 
 # If a pre-backup command is defined, run it before creating the tarball
 if [ -n "$BEFORE_BACKUP_CMD" ]; then
@@ -62,7 +71,7 @@ fi
 tar_try=0
 until [ $tar_try -ge $BACKUP_TAR_TRIES ]
 do
-  time tar czf $tarball $BACKUP_TAR_OPTION $PATHS_TO_BACKUP
+  time tar c${COMPRESS_OPTION}f $tarball $BACKUP_TAR_OPTION $PATHS_TO_BACKUP
   rc=$?
   if [ $rc -eq 0 ]; then
     echo "Created archive $tarball"

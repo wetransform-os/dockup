@@ -4,7 +4,13 @@ cd $WORK_DIR
 CURRENT_DIR=$(pwd)
 echo "Working dir is $CURRENT_DIR, scripts in $SCRIPT_PATH"
 
-# do backup according to configured mode
+if [[ "$DOCKUP_COMPRESS" == "true" ]]; then
+  COMPRESS_OPTION="z"
+else
+  COMPRESS_OPTION=""
+fi
+
+# do restore according to configured mode
 source "${SCRIPT_PATH}/${DOCKUP_MODE}/restore.sh"
 
 # Check if tarball is encrypted
@@ -32,7 +38,7 @@ fi
 
 # Extract backup
 echo "Extracting backup archive $LAST_BACKUP..."
-tar xzf $LAST_BACKUP -C / $RESTORE_TAR_OPTION
+tar x${COMPRESS_OPTION}f $LAST_BACKUP -C / $RESTORE_TAR_OPTION
 rc=$?
 
 rm $LAST_BACKUP
