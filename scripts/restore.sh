@@ -4,12 +4,6 @@ cd $WORK_DIR
 CURRENT_DIR=$(pwd)
 echo "Working dir is $CURRENT_DIR, scripts in $SCRIPT_PATH"
 
-if [[ "$DOCKUP_COMPRESS" == "true" ]]; then
-  COMPRESS_OPTION="z"
-else
-  COMPRESS_OPTION=""
-fi
-
 # do restore according to configured mode
 source "${SCRIPT_PATH}/${DOCKUP_MODE}/restore.sh"
 
@@ -34,6 +28,14 @@ if [ ${LAST_BACKUP: -4} == ".gpg" ]; then
     rm $LAST_BACKUP
     exit 1
   fi
+fi
+
+if [ ${LAST_BACKUP: -3} == ".gz" ]; then
+  echo "Detected compressed archive"
+  COMPRESS_OPTION="z"
+else
+  echo "Detected uncompressed archive"
+  COMPRESS_OPTION=""
 fi
 
 # Extract backup
